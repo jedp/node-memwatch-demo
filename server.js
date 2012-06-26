@@ -1,7 +1,7 @@
 const express = require('express'),
       app = express.createServer(),
       io = require('socket.io').listen(app),
-      gc = require('node-gcstats'),
+      gc = require('gcstats'),
       mtrace = require('mtrace'),
       worker = require('./worker');
 
@@ -52,9 +52,11 @@ setInterval(function() {
 
 // and also emit post-gc stats
 gc.on('gc', function(data) {
+  data.stats = gc.stats();
   io.sockets.emit('post-full-gc-sample', data);
 });
 gc.on('gc_incremental', function(data) {
+  data.stats = gc.stats();
   io.sockets.emit('post-incremental-gc-sample', data);
 });
 
