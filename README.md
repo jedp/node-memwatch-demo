@@ -106,7 +106,7 @@ memory usage.  So another important API call would instruct V8 to
 perform a full GC, and asynchronously return statistics about the heap
 before any new objects have been allocated:
 
-``javascript
+```javascript
 foo.gc(function(memData) {
   // We forced GC and now can look at clean memory data
 });
