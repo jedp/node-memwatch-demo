@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>node-gcstats</title>
+  <link rel="stylesheet" href="/style.css" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Belgrano' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Cousine:400,700' rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+
+  <div class='content'>
+
+    <h1>1. Well-behaved (?); Memory use sampling</h1>
+
+    <ul class='buttons'>
+      <li id='do_gc'>Force Compaction</li>
+      <li id='add_load'>Make It Busy</li>
+    </ul>
+
+    <div id='graph'></div>
+
+    <div class='display'>
+      <div class='display-box left events'>
+        <h3><code>gcstats</code> events</h3>
+        <ul class='display-items'>
+          <li class='currentBase'>Curr base <span class='data'/></li>
+          <li class='estimatedBase'>Est base <span class='data'/></li>
+          <li class='usageTrend'>Usage trend <span class='data'/></li>
+          <li class='fullGCCount'>Full GCs <span class='data'/></li>
+          <li class='incrGCCount'>Incr GCs <span class='data'/></li>
+          <li class='heapCompactions'>Compactions <span class='data'/></li>
+        </ul>
+      </div>
+
+      <div class='display-box right usage'>
+        <h3><code>memoryUsage()</code></h3>
+        <ul class='display-items'>
+          <li class='heapUsed'>Heap used <span class='data'/></li>
+          <li class='heapTotal'>Heap total <span class='data'/></li>
+          <li class='RSS'>RSS <span class='data'/></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</body>
+
+<script src="/head.min.js"></script>
+<script>
+head.js(
+  {socket_io: "/socket.io/socket.io.js"},
+  {jquery:    "/jquery-1.7.1.min.js"},
+  {jq_noisy:  "/jquery.noisy.min.js"},
+  {d3:        "/d3.v2.min.js"},
+  {graph:     "/graph.js"},
+  {client:    "/client.js"})
+  .ready(function() {
+    $('body').noisy();
+  });
+</script>
+</html>

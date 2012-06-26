@@ -1,0 +1,234 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v1.0 | 20080212 */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+    outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins {
+    text-decoration: none;
+}
+del {
+    text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* 
+ End of reset
+ */
+
+.wf-loading body {
+  visiblity: hidden;
+}
+
+body {
+  font-family: serif;
+  background-color: #aaa;
+  color: #000;
+  font-family: "Belgrano", serif;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 0px;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.33em;
+  margin: .5em 0em 1em 0em;
+}
+h1 code {
+  font-weight: 700;
+}
+
+h2 {
+  font-weight: 700;
+}
+h2 code {
+  font-weight: 700;
+}
+
+h3 {
+  font-weight: 700;
+  padding-bottom: 0.5em;
+  opacity: 0.7;
+}
+h3 code {
+  font-weight: 700;
+}
+
+.content {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div {
+  margin: .5em 0px;
+}
+
+.display {
+  position: relative;
+  width: 600px;
+}
+
+.display-box{
+  display: inline-block;
+  width: 280px;
+  border-radius: 12px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  background-color: #ccc;
+}
+
+
+.display-items > li {
+  position: relative;
+  min-width: 260px;
+}
+
+.data {
+  text-align: right;
+  display: inline-block;
+  right: 0;
+  position: absolute;
+}
+
+.usage {
+  top: 0px;
+  position: absolute;
+  margin-left: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+code, pre, tt, .data {
+  font-family: 'Cousine', sans-serif;
+  font-weight: 400;
+}
+
+svg {
+    background-color: #ccc;
+    border-radius: 12px;
+    padding: 12px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+svg path {
+    stroke: black;
+    stroke-width: 1;
+    fill: none;
+}
+
+svg text {
+    stroke: black;
+}
+
+svg line {
+    stroke: black;
+}
+
+/* the current heap usage is green */
+svg path:nth-of-type(1) {
+    stroke: green;
+}
+svg text:nth-of-type(1) {
+    stroke: green;
+}
+.heapUsed > .data {
+    color: green;
+}
+
+/* heap base is red */
+svg path:nth-of-type(2) {
+    stroke: red;
+}
+svg text:nth-of-type(2) {
+    stroke: red;
+}
+.currentBase > .data {
+    color: red;
+}
+
+ul.buttons {
+    text-align: center;
+    margin: .5em 0em;
+    margin-left: auto;
+    margin-right: auto;
+}
+ul.buttons li {
+    display: inline-block;
+    background-color: #eee;
+    color: #000;
+    text-align: center;
+    line-height: 1.67em;
+    padding: 2px 6px;
+    min-width: 12em;
+    margin: 0px 6px;
+    border-radius: .3em;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    background: -moz-linear-gradient(top, #549fdc, #4384c4);
+}
+ul.buttons li:hover,
+ul.buttons li:active {
+    cursor: pointer;
+}
+
+ul.buttons li:active {
+  position: relative;
+  top: 1px;     /* slight push down on click */
+  background: -moz-linear-gradient(top, #4384c4, #549fdc);
+}
+
+ul.buttons li:hover {
+  background: #679ef1;
+  background: -moz-linear-gradient(top, #679ef1, #538ad1);
+}
+
+
