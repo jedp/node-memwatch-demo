@@ -81,7 +81,6 @@ var doStuff = module.exports.doStuff = function doStuff() {
   function next() {
     stuff += Math.random() + bigText;
     done += 1;
-    console.log(done);
     if (done > 500) {
       stuff = undefined;
     } else {
