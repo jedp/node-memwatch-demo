@@ -2,7 +2,6 @@ const express = require('express'),
       app = express.createServer(),
       io = require('socket.io').listen(app),
       gc = require('gcstats'),
-      mtrace = require('mtrace'),
       worker = require('./worker');
 
 var clients = [];
