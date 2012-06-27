@@ -1,11 +1,3 @@
-=================
-node-gcstats-demo
-=================
-
-This is a demonstration of git://github.com/lloyd/node-gcstats.git, a
-library for detecting and identifying memory leaks in Node.JS
-applications.
-
 Discovering and Finding Memory Leaks with `node-gcstats`
 ========================================================
 
@@ -15,8 +7,10 @@ git://github.com/lloyd/node-gcstats.git, which seeks to help both with
 the detection of memory leaks and the identification of their source
 in Node.JS applications.
 
-So What?
---------
+The code for this presentation is contained in the other branches.
+
+Memory Leaks?  So What?
+-----------------------
 
 Cool story, bro, but I've got 2 GB of RAM on this box.  Why should I
 care?  What could possibly go wrong?
@@ -40,9 +34,31 @@ Well, there are at least three things you should be concerned about:
 Some Examples of Leaks
 ----------------------
 
-closures
+Because closures maintain references to their scope and all variables
+therein, they can easily be the source of memory leaks.  For example:
 
-library code
+```javascript
+...
+}
+```
+
+Sometimes it's easy to spot problems like this.  But in Node's
+asynchronous world, we generate closures all the time in the form of
+callbacks.  If these callbacks are not handled as fast as they are
+created, memory allocations will build up and code that doesn't look
+leaky will act leaky.  That's harder to spot.
+
+What if your application is leaking due to a bug in upstream code?
+You may be able to track down the location in your code from where the
+leak is emanating, but you might just stare in bewilderment at your
+perfectly-written code wondering how in the world it can be leaking!
+For example, until fairly recently, anyone using `http.ClientRequest`
+was leaking a teensy bit of memory.  Long-running services under heavy
+load were leaking a lot of memory.  (The fix in the Node
+codebase was a change of a [mere two
+characters](https://github.com/vvo/node/commit/e138f76ab243ba3579ac859f08261a721edc20fe)
+- replacing `on` with `once`.)
+
 
 Tools for Finding Leaks
 -----------------------
@@ -203,3 +219,9 @@ Traversing the Heap
 -------------------
 
 use named constructors for heap data to be meaningful
+
+Notes
+-----
+
+buffers? 
+since node 0.4, buffers are allocated using pure JS objects ouside the V8 heap
