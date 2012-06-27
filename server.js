@@ -36,6 +36,10 @@ io.sockets.on('connection', function(socket) {
         worker.doStuff();
         break;
 
+      case "pause":
+        worker.togglePause();
+        break;
+
       default:
         console.log("what is " + message + "?");
         break;
@@ -47,7 +51,7 @@ io.sockets.on('connection', function(socket) {
 
 setInterval(function() {
   io.sockets.emit('temporal-sample', process.memoryUsage());
-}, 250);
+}, 600);
 
 // and also emit post-gc stats
 gc.on('gc', function(data) {
@@ -58,6 +62,3 @@ gc.on('gc_incremental', function(data) {
   data.stats = gc.stats();
   io.sockets.emit('post-incremental-gc-sample', data);
 });
-
-// start doing random work
-worker.doYourThing();

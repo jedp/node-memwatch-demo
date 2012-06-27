@@ -1,8 +1,9 @@
 // A worker.  Sometimes well-behaved, sometimes not.
 
 var fs = require('fs');
-var numToSpawn = 100;
+var paused = true;
 
+var numToSpawn = 100;
 var leak = [];
 var bigText = fs.readFileSync('/etc/services');
 
@@ -13,7 +14,21 @@ var doYourThing = module.exports.doYourThing = function doYourThing() {
 //  goLeakyWorkers();
 };
 
+var togglePause = module.exports.togglePause = function() {
+  if (paused) {
+    paused = false;
+    doYourThing();
+  } else {
+    paused = true;
+  }
+  return paused ? "paused" : "running";
+};
+
 var goSlowWorkers = function goSlowWorkers(interval) {
+  if (paused) {
+    return;
+  }
+
   // A non-leaking bunch of work that lasts a fairly long time
   if (Math.random() > 0.1) {
     console.log("spawn slow workers.  interval: " + interval);
@@ -34,6 +49,10 @@ var goSlowWorkers = function goSlowWorkers(interval) {
 };
 
 var goFastWorkers = function goFastWorkers(interval) {
+  if (paused) {
+    return;
+  }
+
   // A non-leaking bunch of work that lasts a short time
   if (Math.random() > .5) {
     console.log("spawn fast workers.  interval: " + interval);
@@ -62,6 +81,9 @@ var goFastWorkers = function goFastWorkers(interval) {
 };
 
 var goLeakyWorkers = function goLeakyWorkers() {
+  if (paused) {
+    return;
+  }
   // A buncho of work that leaks periodically
   if (Math.random() > .999) {
     console.log("LEAKING");
@@ -74,6 +96,9 @@ var goLeakyWorkers = function goLeakyWorkers() {
 };
 
 var doStuff = module.exports.doStuff = function doStuff() {
+  if (paused) {
+    return;
+  }
   // simulate load spike
   // Called by the "do stuff" button in the console
   var stuff = "";
