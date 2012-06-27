@@ -58,8 +58,7 @@ For example, until fairly recently, anyone using `http.ClientRequest`
 was leaking a teensy bit of memory.  Long-running services under heavy
 load were leaking a lot of memory.  (The fix in the Node codebase was
 a change of a [mere two
-characters](https://github.com/vvo/node/commit/e138f76ab243ba3579ac859f08261a721edc20fe)
-- replacing `on` with `once`.)
+characters](https://github.com/vvo/node/commit/e138f76ab243ba3579ac859f08261a721edc20fe), replacing the method `on()` with the method `once()`.)
 
 
 Tools for Finding Leaks
