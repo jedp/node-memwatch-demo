@@ -12,14 +12,15 @@ The code for this presentation is contained in the other branches.
 Memory Leaks?  So What?
 -----------------------
 
-Cool story, bro, but I've got 2 GB of RAM on this box.  Why should I
-care?  What could possibly go wrong?
+Cool story, bro, but I've got 2 GB of RAM on this box.  That should be
+more than enough if I just restart from time to time, right?
 
 Well, there are at least three things you should be concerned about:
 
 1. As memory heap size grows, V8 becomes increasingly sluggish.  (In
    part, this is because V8's survival instincts kick in and it starts
-   performing full garbage-collections very aggressively.)
+   performing full garbage-collections very aggressively.)  Memory
+   leaks hurt performance.
 
 2. Leaks can be a vector for other types of failure.  If your leaky
    code is hanging onto references to other resources, you may find
@@ -34,28 +35,29 @@ Well, there are at least three things you should be concerned about:
 Some Examples of Leaks
 ----------------------
 
-Because closures maintain references to their scope and all variables
-therein, they can easily be the source of memory leaks.  For example:
+Closures are the most notorious source of memory leaks in JavaScript.
+This is because closures maintain references to their scope and all
+variables therein.  For example:
 
 ```javascript
 ...
-}
 ```
 
-Sometimes it's easy to spot problems like this.  But in Node's
-asynchronous world, we generate closures all the time in the form of
-callbacks.  If these callbacks are not handled as fast as they are
-created, memory allocations will build up and code that doesn't look
-leaky will act leaky.  That's harder to spot.
+Leaks like this will probably be spotted eventually if somebody's
+looking for them.  But in Node's asynchronous world, we generate
+closures all the time in the form of callbacks.  If these callbacks
+are not handled as fast as they are created, memory allocations will
+build up and code that doesn't look leaky will act leaky.  That's
+harder to spot.
 
-What if your application is leaking due to a bug in upstream code?
+And what if your application is leaking due to a bug in upstream code?
 You may be able to track down the location in your code from where the
 leak is emanating, but you might just stare in bewilderment at your
 perfectly-written code wondering how in the world it can be leaking!
 For example, until fairly recently, anyone using `http.ClientRequest`
 was leaking a teensy bit of memory.  Long-running services under heavy
-load were leaking a lot of memory.  (The fix in the Node
-codebase was a change of a [mere two
+load were leaking a lot of memory.  (The fix in the Node codebase was
+a change of a [mere two
 characters](https://github.com/vvo/node/commit/e138f76ab243ba3579ac859f08261a721edc20fe)
 - replacing `on` with `once`.)
 
@@ -63,7 +65,8 @@ characters](https://github.com/vvo/node/commit/e138f76ab243ba3579ac859f08261a721
 Tools for Finding Leaks
 -----------------------
 
-There is a number of tools for finding leaks in Node.JS applications.
+We need tools to help us find leaks.  There is a growing collection of
+good collection of tools for finding leaks in Node.JS applications.
 
 For starters, since this is a memory problem, we can look at `top` or
 `htop` or some system utility to discover our memory footprint.
@@ -91,17 +94,16 @@ If you are using Joyent's SmartOS platform, there is a tremendous
 arsenal of tools at your disposal for [debugging Node.JS memory
 leaks](http://dtrace.org/blogs/bmc/2012/05/05/debugging-node-js-memory-leaks/)
 
-What Do We Want To Do About It?
--------------------------------
+All these tools are brilliant, but they also have some drawbacks.  The
+Web Inspector approach is suitable for applications in development,
+but is difficult to use on a live deployment, especially when multiple
+servers and subprocess are involved in the mix.  As such, it may be
+difficult to reproduce memory leaks that bite in long-running and
+heavily-loaded production environments.  Tools like `dtrace` and
+`libumem` are awe-inspiring, but only work on certain platforms.
 
-The memory profiling and debugging tools just mentioned are brilliant,
-but they also have some drawbacks.  The Web Inspector approach is
-suitable for a few processes while in development, but is difficult to
-use on a live deployment, especially when multiple servers and
-subprocess are involved in the mix.  As such, it may be difficult to
-reproduce memory leaks that bite in long-running and heavily-loaded
-production environments.  Tools like `dtrace` and `libumem` are
-awe-inspiring, but platform-specific.
+What We Want To Do
+------------------
 
 We would like to have a platform-independent debugging library that
 can alert us when our programs might be leaking memory, and help us
@@ -131,15 +133,18 @@ foo.gc(function(memData) {
 Tracking Memory Usage
 ---------------------
 
-A simple approach would be to repeatedly call `memoryUsage()` at a fixed
-interval and see if there's a positive delta in heap allocations.
+Ok, we know what we want.  Now let's return to the problem of
+debugging memory leaks in Node.JS.
 
-We'll make a simple EventEmitter that emits the memory usage every
-minute or so, and plot the usage over time.
+A simple approach to detecting leaks would be to repeatedly call
+`memoryUsage()` at a fixed interval and see if there's a positive
+delta in heap allocations.
 
-Let's try a well-behaved program with no leaks:
+To try this we'll make a simple EventEmitter that emits the memory
+usage every minute or so, and plot the usage over time.  We'll write a
+simple, well-behaved program and track its memory usage:
 
-  [ demo example 1 ]
+  - run example 1 
 
 Ok, I can see the memory usage spiking up and down - but could I know
 for certain that this program was not leaking?  How many days would it
@@ -148,24 +153,37 @@ have to run for to produce a useful trend?
 Following Post-GC Heap Statistics
 ---------------------------------
 
-temporal samples naive - how about post-gc
+Sampling at intervals like this from a chaotic graph makes it
+difficult to see patterns without a lot of time and data to smooth
+over the noise.  But we can do better.  We can sample memory usage
+after a full garbage-collection and memory compaction.
 
 V8 provides a nice post-gc hook, `V8::AddGCEpilogueCallback`, that
 lets us execute some code before the js thread has a chance to
-allocate any new objects.  So this gives us a more meaningful view of
-the heap - after GC (and compaction), we can see the minimum heap
-size over time.
+allocate any new objects.  So this gives us a clearer view of
+the heap.
 
-So we'll make a simple native module that simply sends us some heap
+We'll make a simple native module that simply sends us some heap
 size statistics every time GC occurs.  We'll emit this data up to our
 graph whenever it arrives.
 
-[ demo example 2 ]
+  - run example 2
 
-This seems promising.  We can plot the base memory usage over time.
+This seems promising.  We can see the base memory usage over time much
+more clearly.
+
+Because Node and V8 have complex heuristics governing the selection of
+the time at which to perform garbage colleciton, we provide a way to
+manually trigger a full GC and compaction so that we can speed things
+along a bit.  Otherwise, we may have to wait a long time under heavy
+loads until V8 and Node think it's a safe time to execute GC with
+minimal impact on performance.
 
 Trending Heuristics
 -------------------
+
+In this example, we introduce a leaky function to see how our profiler
+behaves.
 
 We can add some analysis to this data and try to establish a trend in
 usage over time.
@@ -181,35 +199,31 @@ usage over time.
 
 So let's try this with a leaky program and see what happens.
 
-[ demo example 3 ]
+   - run example 3
+
+We can see clearly that the base heap usage only goes up and up.  The
+indicator `usage_trend` remains positive, and so looks like a good
+candidate to be a sentinel to trigger a warning that we may have a
+leak.
 
 Where Is The Leak?
 ------------------
 
-Once we have a leak detector, we need a leak identifier.  How do we know where to look?
+Once we have a leak detector, we need a leak identifier.  How do we
+know where to look?
 
 The classic approach is at this point to make a huge pot of coffee,
 lock yourself in a closet, and start bisecting code for hours or days
 until you find the offender.
 
-A more contemporary approach would involve using some of the powerful
-debugging and introspection tools:
+Depending on your deployment and environment, you could try to use one
+of the tools we discussed above (`dtrace`, `node-inspector`,
+`v8-profiler`, `node-mstats`, `node-heap-dump`, etc.).
 
-- dtrace
-- node-inspector
-- node-mstats
-- node-heap-dump
-
-The great thing here is being able to get the names of the guilty
-parties quickly.
-
-But there are some limitations with these approaches
-
-- maybe platform specific
-- maybe require interactive monitoring of single processes
-
-What if you have lots of processes?  What if they spawn subprocesses?
-It gets complicated.
+The main thing here is to be able to get the names of the guilty
+parties quickly.  But again, these approaches have limitations, such
+as platform-dependence or context restrictions, and may not be
+suitable or available for debugging in all situations.
 
 We want to have the benefit of progressive heap diffing, but we also
 want the programs to do the work of monitoring themselves and telling
