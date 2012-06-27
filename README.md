@@ -77,6 +77,12 @@ Jimb Esser has written
 [node-mtrace](https://github.com/Jimbly/node-mtrace), which uses the
 GCC `mtrace` utility to profile heap usage.
 
+Dave Pacheco's
+[node-heap-dump](https://github.com/davepacheco/node-heap-dump) takes
+a snapshot of the V8 heap and serializes the whole thing out in a huge
+JSON file.  It includes tools to traverse and investigate the
+resulting snapshot in JavaScript.
+
 Danny Coates's
 [v8-profiler](https://github.com/dannycoates/v8-profiler) and
 [node-inspector](https://github.com/dannycoates/node-inspector)
