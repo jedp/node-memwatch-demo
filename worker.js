@@ -21,7 +21,7 @@ var togglePause = module.exports.togglePause = function() {
   } else {
     paused = true;
   }
-  return paused ? "paused" : "running";
+  return paused;
 };
 
 var goSlowWorkers = function goSlowWorkers(interval) {

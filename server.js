@@ -37,7 +37,7 @@ io.sockets.on('connection', function(socket) {
         break;
 
       case "pause":
-        worker.togglePause();
+        io.sockets.emit('pause', {paused: worker.togglePause()});
         break;
 
       default:

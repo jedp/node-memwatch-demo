@@ -58,6 +58,16 @@ socket.on('post-incremental-gc-sample', function(data) {
   Graph.addGcData('incremental', data);
 });
 
+socket.on('pause', function(data) {
+  if (data.paused) {
+    $('.pause-button').addClass('paused').text('GO');
+    $('#add_load').addClass('disabled');
+  } else {
+    $('.pause-button').removeClass('paused').text('STOP');
+    $('#add_load').removeClass('disabled');
+  }
+});
+
 /*
  * Interface - the operator can:
  * - choose "Force Compaction", which calls gc() on the gcstats obj
@@ -69,4 +79,8 @@ $('#do_gc').on('click', function() {
 
 $('#add_load').on('click', function() {
   socket.send("add_load");
+});
+
+$('#pause').on('click', function() {
+  socket.send("pause");
 });

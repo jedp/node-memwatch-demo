@@ -201,34 +201,51 @@ ul.buttons {
     margin-left: auto;
     margin-right: auto;
 }
-ul.buttons li {
+ul.buttons li.button {
     display: inline-block;
-    background-color: #eee;
-    color: #000;
     text-align: center;
     line-height: 1.67em;
     padding: 2px 6px;
-    min-width: 12em;
+    color: #000;
     margin: 0px 6px;
     border-radius: .3em;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.big-button {
+    background-color: #eee;
+    min-width: 12em;
     background: -moz-linear-gradient(top, #549fdc, #4384c4);
+}
+.pause-button {
+    min-width: 3em;
+    background: -moz-linear-gradient(top, #f32c1d, #cc2518);
+}
+.paused {
+    background: -moz-linear-gradient(top, #31dc17, #20be16);
 }
 ul.buttons li:hover,
 ul.buttons li:active {
     cursor: pointer;
 }
 
-ul.buttons li:active {
+li.button:active {
   position: relative;
   top: 1px;     /* slight push down on click */
-  background: -moz-linear-gradient(top, #4384c4, #549fdc);
 }
-
-ul.buttons li:hover {
-  background: #679ef1;
+li.big-button:active,
+li.big-button:hover {
   background: -moz-linear-gradient(top, #679ef1, #538ad1);
 }
+
+li.pause-button:active,
+li.pause-button:hover {
+  background: -moz-linear-gradient(top, #fa352d, #dc3528);
+}
+li.paused:active,
+li.paused:hover {
+  background: -moz-linear-gradient(top, #41ec27, #20be16);
+}
+
 
 
