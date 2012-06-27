@@ -51,7 +51,7 @@ io.sockets.on('connection', function(socket) {
 
 setInterval(function() {
   io.sockets.emit('temporal-sample', process.memoryUsage());
-}, 600);
+}, 333);
 
 // and also emit post-gc stats
 gc.on('gc', function(data) {

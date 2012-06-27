@@ -11,7 +11,7 @@ var doYourThing = module.exports.doYourThing = function doYourThing() {
   goFastWorkers(250);
 //  goFastWorkers(350);
   goSlowWorkers(400);
-//  goLeakyWorkers();
+  goLeakyWorkers();
 };
 
 var togglePause = module.exports.togglePause = function() {
@@ -87,7 +87,7 @@ var goLeakyWorkers = function goLeakyWorkers() {
   // A buncho of work that leaks periodically
   if (Math.random() > .999) {
     console.log("LEAKING");
-    for (var i=0; i<42; i++) {
+    for (var i=0; i<100; i++) {
       // concat a new huge string each time
       leak.push(i + bigText);
     }

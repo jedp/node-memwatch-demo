@@ -40,8 +40,8 @@ socket.on('temporal-sample', function(data) {
 
 function updateGCDataList(stats) {
   $('.usageTrend .data').text(stats.usage_trend.toFixed(2));
-  $('.fullGCCount .data').text(stats.num_full_gc);
-  $('.incrGCCount .data').text(stats.num_inc_gc);
+  $('.fullGCCount .data').text(formatNumber(stats.num_full_gc));
+  $('.incrGCCount .data').text(formatNumber(stats.num_inc_gc));
   $('.heapCompactions .data').text(stats.heap_compactions);
 }
 socket.on('post-full-gc-sample', function(data) {

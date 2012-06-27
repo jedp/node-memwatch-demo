@@ -17,7 +17,8 @@ window.Graph = {};
   // data sets we're collecting
   var timeSamples = [0];
   var gcFullSamples = [0];
-  var gcIncrementalSamples = [0];
+  var nextFullSample = null;
+//  var gcIncrementalSamples = [0];
   var heapSize = 0;
   var heapLeast = Infinity;
   var currentBase = 0;
@@ -52,10 +53,10 @@ window.Graph = {};
       .attr('x', 550)
       .attr('y', (currentBase/heapSize || 0) * (16 - h))
       .text(currentBase.toFixed(1));
-    base.append("svg:text").attr("class", "linktext, data")
-      .attr('x', 550)
-      .attr('y', (heapLeast/heapSize) * (16-h))
-      .text(heapLeast.toFixed(1));
+//    base.append("svg:text").attr("class", "linktext, data")
+//      .attr('x', 550)
+//      .attr('y', (heapLeast/heapSize) * (16-h))
+//      .text(heapLeast.toFixed(1));
   }
 
   Graph.addGcData = function(type, gcData) {
@@ -77,9 +78,7 @@ window.Graph = {};
 
     heapLeast = Math.min(heapLeast, gcData.stats.current_base / MB);
     if (type === 'full') {
-      Graph.replot({gcFullSample: currentBase, compacted: gcData.compacted});
-    } else {
-      Graph.replot({gcIncrementalSample: currentBase, compacted: gcData.compacted});
+      nextFullSample = currentBase;
     }
   };
 
@@ -108,16 +107,12 @@ window.Graph = {};
     var numSamples = timeSamples.length;
     if (sample.timeSample) {
       updateData(timeSamples, sample.timeSample);
-      updateData(gcFullSamples, gcFullSamples[numSamples-1]);
-      updateData(gcIncrementalSamples, gcIncrementalSamples[numSamples-1]);
-    } else if (sample.gcIncrementalSample) {
-      updateData(gcIncrementalSamples, sample.gcIncrementalSample);
-      updateData(gcFullSamples, gcFullSamples[numSamples-1]);
-      updateData(timeSamples, timeSamples[numSamples-1]);
-    } else if (sample.gcFullSample) {
-      updateData(gcFullSamples, sample.gcFullSample);
-      updateData(gcIncrementalSamples, gcIncrementalSamples[numSamples-1]);
-      updateData(timeSamples, timeSamples[numSamples-1]);
+      if (nextFullSample !== null) {
+        updateData(gcFullSamples, nextFullSample);
+        nextFullSample = null;
+      } else {
+        updateData(gcFullSamples, gcFullSamples[numSamples-1]);
+      }
     }
 
     d3.selectAll('svg path').remove();
