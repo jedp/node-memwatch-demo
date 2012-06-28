@@ -30,8 +30,7 @@ module.exports = {
    *                   page.  Useful if you're demo'ing to an audience.
    */
   clientConfig: {
-    title: "node-gcstats and memwatch",
-    show: "usage,events"
-    //show: "events,allocations"
+    title: "Memory Usage of a Well-Behaved Program",
+    show: "usage"
   }
 };
