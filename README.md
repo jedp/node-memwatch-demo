@@ -73,31 +73,36 @@ For starters, since this is a memory problem, we can look at `top` or
 Within Node itself, there is `process.memoryUsage()`, which will
 report Node's heap footprint.
 
-Jimb Esser has written
-[node-mtrace](https://github.com/Jimbly/node-mtrace), which uses the
-GCC `mtrace` utility to profile heap usage.
+Additionally:
 
-Dave Pacheco's
-[node-heap-dump](https://github.com/davepacheco/node-heap-dump) takes
-a snapshot of the V8 heap and serializes the whole thing out in a huge
-JSON file.  It includes tools to traverse and investigate the
-resulting snapshot in JavaScript.
+- Jimb Esser's
+  [node-mtrace](https://github.com/Jimbly/node-mtrace), which uses the
+  GCC `mtrace` utility to profile heap usage.
 
-Danny Coates's
-[v8-profiler](https://github.com/dannycoates/v8-profiler) and
-[node-inspector](https://github.com/dannycoates/node-inspector)
-provide Node bindings for the V8 profiler and a Node debugging
-interface using the WebKit Web Inspector.
+- Dave Pacheco's
+  [node-heap-dump](https://github.com/davepacheco/node-heap-dump)
+  takes a snapshot of the V8 heap and serializes the whole thing out
+  in a huge JSON file.  It includes tools to traverse and investigate
+  the resulting snapshot in JavaScript.
 
-Felix Geisendörfer's [Node Memory Leak
-Tutorial](https://github.com/felixge/node-memory-leak-tutorial) is a
-short and sweet explanation of how to use the `v8-profiler` and
-`node-debugger`, and is presently the state-of-the-art for most
-Node.JS memory leak debugging.
+- Danny Coates's
+  [v8-profiler](https://github.com/dannycoates/v8-profiler) and
+  [node-inspector](https://github.com/dannycoates/node-inspector)
+  provide Node bindings for the V8 profiler and a Node debugging
+  interface using the WebKit Web Inspector.
 
-If you are using Joyent's SmartOS platform, there is a tremendous
-arsenal of tools at your disposal for [debugging Node.JS memory
-leaks](http://dtrace.org/blogs/bmc/2012/05/05/debugging-node-js-memory-leaks/)
+- Felix Gnass's fork of the same that [un-disables the retainers
+  graph](http://fgnass.posterous.com/finding-memory-leaks-in-nodejs-applications)
+
+- Felix Geisendörfer's [Node Memory Leak
+  Tutorial](https://github.com/felixge/node-memory-leak-tutorial) is a
+  short and sweet explanation of how to use the `v8-profiler` and
+  `node-debugger`, and is presently the state-of-the-art for most
+  Node.JS memory leak debugging.
+
+- Joyent's SmartOS platform, which furnishes an arsenal of tools at
+  your disposal for [debugging Node.JS memory
+  leaks](http://dtrace.org/blogs/bmc/2012/05/05/debugging-node-js-memory-leaks/)
 
 All these tools are brilliant, but they also have some drawbacks.  The
 Web Inspector approach is suitable for applications in development,
