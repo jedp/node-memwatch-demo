@@ -17,7 +17,6 @@ app.configure(function(){
 
 app.listen(process.env['PORT'] || 3000, function() {
   console.log("server listening on port %d", app.address().port);
-  console.log("config: " + JSON.stringify(config, null, 2));
 });
 
 // reduce socket.io logging noise
