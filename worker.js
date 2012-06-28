@@ -1,13 +1,15 @@
 // A worker.  Sometimes well-behaved, sometimes not.
 
 var fs = require('fs');
+var path = require('path');
+
 var paused = true;
 var config = require('./config');
 
 var numToSpawn = 100;
 var leak = [];
 
-var bigText = fs.readFileSync('/etc/services');
+var bigText = fs.readFileSync(path.join(__dirname, 'something.txt'));
 function SlowTask() {
   this.stuff = bigText;
 }
