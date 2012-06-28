@@ -5,11 +5,14 @@ var path = require('path');
 
 var paused = true;
 var config = require('./config');
+console.log("worker config: leak=" + config.leak);
 
 var numToSpawn = 100;
 var leak = [];
 
 var bigText = fs.readFileSync(path.join(__dirname, 'something.txt'));
+console.log("read %d bytes for bigText", bigText.length);
+
 function SlowTask() {
   this.stuff = bigText;
 }
