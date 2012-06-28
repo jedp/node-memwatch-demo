@@ -91,7 +91,9 @@ var goFastWorkers = function goFastWorkers(interval) {
 };
 
 function LeakyClass(someInput) {
-  return someInput;
+  this.info = Math.random();
+  this.foo = someInput;
+  return this.foo + this.info;
 };
 var goLeakyWorkers = function goLeakyWorkers() {
   if (paused) {
@@ -99,10 +101,12 @@ var goLeakyWorkers = function goLeakyWorkers() {
   }
   // A buncho of work that leaks periodically
   if (Math.random() > .995) {
-    console.log("LEAKING");
-    for (var i=0; i<(Math.floor(Math.random() * 500 + 1)); i++) {
+    var max = Math.floor(Math.random() * 10);
+    console.log("LEAKING " + max);
+    var txt = "";
+    for (var i=0; i<max; i++) {
       // concat a new huge string each time
-      leak.push( new LeakyClass );
+      leak.push( new LeakyClass(Math.random() + bigText.slice(i)) );
     }
   }
   setTimeout(goLeakyWorkers, 10);

@@ -3,7 +3,7 @@ module.exports = {
    * leak
    *        (boolean)  Set to true to leak memory
    */
-  leak: false,
+  leak: true,
 
   /*
    * hdInterval
@@ -31,6 +31,6 @@ module.exports = {
    */
   clientConfig: {
     title: "Memory Usage of a Well-Behaved (?) Program",
-    show: "usage"
+    show: "events,allocations"
   }
 };
