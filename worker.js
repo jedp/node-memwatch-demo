@@ -6,7 +6,11 @@ var config = require('./config');
 
 var numToSpawn = 100;
 var leak = [];
+
 var bigText = fs.readFileSync('/etc/services');
+function SlowTask() {
+  this.stuff = bigText;
+}
 
 var doYourThing = module.exports.doYourThing = function doYourThing() {
   goFastWorkers(250);
@@ -28,15 +32,15 @@ var goSlowWorkers = function goSlowWorkers(interval) {
   if (paused) {
     return;
   }
+  var obj = {};
 
   // A non-leaking bunch of work that lasts a fairly long time
   if (Math.random() > 0.1) {
     //console.log("spawn slow workers.  interval: " + interval);
     var spawned = 0;
-    var obj = {};
     // make a huge object and hold onto it for 1/2 sec
     for (var i=0; i<100;i++) {
-      obj[i] = i + bigText;
+      obj[i] = new SlowTask;
     }
     setTimeout(function() {
       //console.log("freeing obj");
@@ -44,6 +48,7 @@ var goSlowWorkers = function goSlowWorkers(interval) {
       setTimeout(function(){goSlowWorkers(Math.random()*200+200);}, interval);
     }, 100);
   } else {
+    obj = undefined;
     setTimeout(function(){goSlowWorkers(Math.random()*200+200);}, interval);
   }
 };
@@ -52,7 +57,6 @@ var goFastWorkers = function goFastWorkers(interval) {
   if (paused) {
     return;
   }
-
   // A non-leaking bunch of work that lasts a short time
   if (Math.random() > .5) {
     //console.log("spawn fast workers.  interval: " + interval);
@@ -62,7 +66,7 @@ var goFastWorkers = function goFastWorkers(interval) {
       spawned ++;
       var txt = "";
       for (var i=0; i<100; i++) {
-        txt += i + bigText;
+         txt += i + bigText;
       }
     }
     function spawnNext() {
@@ -76,6 +80,7 @@ var goFastWorkers = function goFastWorkers(interval) {
     spawnNext();
     numToSpawn += Math.floor(numToSpawn / 72);
   } else {
+    things = undefined;
     setTimeout(function(){goFastWorkers(Math.random()*100+100);}, Math.floor(Math.random()*interval));
   }
 };
@@ -88,7 +93,7 @@ var goLeakyWorkers = function goLeakyWorkers() {
     return;
   }
   // A buncho of work that leaks periodically
-  if (Math.random() > .999) {
+  if (Math.random() > .995) {
     console.log("LEAKING");
     for (var i=0; i<(Math.floor(Math.random() * 500 + 1)); i++) {
       // concat a new huge string each time
@@ -107,12 +112,10 @@ var doStuff = module.exports.doStuff = function doStuff() {
   var stuff = "";
   var done = 0;
   function next() {
-    stuff += Math.random() + bigText;
+    stuff += done.toString() + bigText;
     done += 1;
-    if (done > 500) {
-      stuff = undefined;
-    } else {
-      setTimeout(next, Math.random() * 10);
+    if (done < 200) {
+      setTimeout(next, 10);
     }
   }
   next();

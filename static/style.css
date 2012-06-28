@@ -136,10 +136,13 @@ div {
   position: absolute;
 }
 
+.left {
+  margin-right: 20px;
+}
+
 .right {
   top: 0px;
   position: absolute;
-  margin-left: 20px;
 }
 
 a {

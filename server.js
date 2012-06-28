@@ -16,7 +16,8 @@ app.configure(function(){
 });
 
 app.listen(process.env['PORT'] || 3000, function() {
-  console.log("leaky server listening on port %d", app.address().port);
+  console.log("server listening on port %d", app.address().port);
+  console.log("config: " + JSON.stringify(config, null, 2));
 });
 
 // reduce socket.io logging noise
@@ -24,6 +25,8 @@ io.set('log level', 1);
 
 io.sockets.on('connection', function(socket) {
   clients.push(socket);
+
+  socket.emit('configure', config.clientConfig);
 
   socket.on('disconnect', function() {
     clients.splice(clients.indexOf(socket), 1);

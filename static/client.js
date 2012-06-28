@@ -80,6 +80,18 @@ socket.on('pause', function(data) {
   }
 });
 
+socket.on('configure', function(data) {
+  if (data.show) {
+    // csl of things to show
+    data.show.split(',').forEach(function(thing) {
+      $("." + thing.trim()).fadeIn();
+    });
+  }
+  if (data.title) {
+    $(".title").text(data.title);
+  }
+});
+
 /*
  * Interface - the operator can:
  * - choose "Force Compaction", which calls gc() on the gcstats obj

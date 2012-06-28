@@ -3,11 +3,17 @@ Discovering and Finding Memory Leaks with `node-gcstats`
 
 Memory leaks are bad.  They are also notoriously hard to detect.  This
 overview will look at one approach,
-git://github.com/lloyd/node-gcstats.git, which seeks to help both with
-the detection of memory leaks and the identification of their source
-in Node.JS applications.
+[node-gcstats](https://github.com/lloyd/node-gcstats), which seeks to
+help both with the detection of memory leaks and the identification of
+their source in Node.JS applications.
 
-The code for this presentation is contained in the other branches.
+To run this demonstration:
+
+- Clone this repo (`git://github.com/jedp/node-gcstats-demo.git`)
+- `npm install`
+- Edit `config.js`
+- `npm start`
+- Visit http://localhost:3000/
 
 Memory Leaks?  So What?
 -----------------------
@@ -135,7 +141,7 @@ perform a full GC, and asynchronously return statistics about the heap
 before any new objects have been allocated:
 
 ```javascript
-foo.gc(function(memData) {
+foo.gc(function(data) {
   // We forced GC and now can look at clean memory data
 });
 ```

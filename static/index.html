@@ -11,7 +11,12 @@
 
   <div class='content'>
 
-    <h1>1. Well-behaved (?); Memory use sampling</h1>
+    <!--
+         To set the title, have the server emit a 'configure' signal
+         including the message {title: "your ad here"}
+      -->
+
+    <h1 class="title">node-gcstats demo</h1>
 
     <ul class='buttons'>
       <li class='button pause-button paused' id='pause'>GO</li>
@@ -21,8 +26,14 @@
 
     <div id='graph'></div>
 
+      <!--
+           To reveal one or the other of these boxes, the server should
+           emit a 'configure' signal with data like {show: "events,usage"}
+        -->
+
+
     <div class='display'>
-      <div class='display-box left events'>
+      <div class='display-box left events' style='display: none'>
         <h3><code>gcstats</code> events</h3>
         <ul class='display-items'>
           <li class='currentBase'>Curr base <span class='data'/></li>
@@ -33,8 +44,8 @@
           <li class='heapCompactions'>Compactions <span class='data'/></li>
         </ul>
       </div>
-<!--
-      <div class='display-box right usage'>
+
+      <div class='display-box right usage' style='display: none'>
         <h3><code>memoryUsage()</code></h3>
         <ul class='display-items'>
           <li class='heapUsed'>Heap used <span class='data'/></li>
@@ -42,8 +53,8 @@
           <li class='RSS'>RSS <span class='data'/></li>
         </ul>
       </div>
--->
-      <div class='display-box right allocations'>
+
+      <div class='display-box right allocations' style='display: none'>
         <h3>Top Heap Allocations</h3>
         <ul class='display-items'>
           <li><span class='name'>---</span> <span class='data'/></li>
