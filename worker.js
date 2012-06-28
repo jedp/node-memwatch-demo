@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var paused = true;
+var config = require('./config');
 
 var numToSpawn = 100;
 var leak = [];
@@ -9,9 +10,8 @@ var bigText = fs.readFileSync('/etc/services');
 
 var doYourThing = module.exports.doYourThing = function doYourThing() {
   goFastWorkers(250);
-//  goFastWorkers(350);
   goSlowWorkers(400);
-  goLeakyWorkers();
+  if (config.leak) goLeakyWorkers();
 };
 
 var togglePause = module.exports.togglePause = function() {
@@ -31,7 +31,7 @@ var goSlowWorkers = function goSlowWorkers(interval) {
 
   // A non-leaking bunch of work that lasts a fairly long time
   if (Math.random() > 0.1) {
-    console.log("spawn slow workers.  interval: " + interval);
+    //console.log("spawn slow workers.  interval: " + interval);
     var spawned = 0;
     var obj = {};
     // make a huge object and hold onto it for 1/2 sec
@@ -39,7 +39,7 @@ var goSlowWorkers = function goSlowWorkers(interval) {
       obj[i] = i + bigText;
     }
     setTimeout(function() {
-      console.log("freeing obj");
+      //console.log("freeing obj");
       obj = undefined;
       setTimeout(function(){goSlowWorkers(Math.random()*200+200);}, interval);
     }, 100);
@@ -55,7 +55,7 @@ var goFastWorkers = function goFastWorkers(interval) {
 
   // A non-leaking bunch of work that lasts a short time
   if (Math.random() > .5) {
-    console.log("spawn fast workers.  interval: " + interval);
+    //console.log("spawn fast workers.  interval: " + interval);
     var workers = Math.floor(Math.random() * numToSpawn);
     var spawned = 0;
     function spawn() {
@@ -80,6 +80,9 @@ var goFastWorkers = function goFastWorkers(interval) {
   }
 };
 
+function LeakyClass(someInput) {
+  return someInput;
+};
 var goLeakyWorkers = function goLeakyWorkers() {
   if (paused) {
     return;
@@ -87,9 +90,9 @@ var goLeakyWorkers = function goLeakyWorkers() {
   // A buncho of work that leaks periodically
   if (Math.random() > .999) {
     console.log("LEAKING");
-    for (var i=0; i<100; i++) {
+    for (var i=0; i<(Math.floor(Math.random() * 500 + 1)); i++) {
       // concat a new huge string each time
-      leak.push(i + bigText);
+      leak.push( new LeakyClass );
     }
   }
   setTimeout(goLeakyWorkers, 10);

@@ -58,6 +58,18 @@ socket.on('post-incremental-gc-sample', function(data) {
   Graph.addGcData('incremental', data);
 });
 
+socket.on('heap-allocations', function(data) {
+  // fill the first six things in the heap allocations list
+  var items = $(".allocations").find("ul").children();
+  for (var i=0; i<6; i++) {
+    var alloc = data[i];
+    if (!alloc) break;
+    var item = $(items[i]);
+    item.find(".name").text(alloc[1][0]);
+    item.find(".data").text(alloc[0]);
+  }
+});
+
 socket.on('pause', function(data) {
   if (data.paused) {
     $('.pause-button').addClass('paused').text('GO');
