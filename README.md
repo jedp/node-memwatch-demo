@@ -1,15 +1,15 @@
-Discovering and Finding Memory Leaks with `node-gcstats`
-========================================================
+Discovering and Finding Memory Leaks with `node-memwatch`
+=========================================================
 
-Memory leaks are bad.  They are also notoriously hard to detect.  This
-overview will look at one approach,
-[node-gcstats](https://github.com/lloyd/node-gcstats), which seeks to
+Memory leaks are bad.  They are also notoriously hard to detect.
+
+[node-memwatch](https://github.com/lloyd/node-memwatch), seeks to
 help both with the detection of memory leaks and the identification of
 their source in Node.JS applications.
 
 To run this demonstration:
 
-- Clone this repo (`git://github.com/jedp/node-gcstats-demo.git`)
+- Clone this repo (`git clone git://github.com/jedp/node-memwatch-demo.git`)
 - `npm install`
 - Edit `config.js`
 - `npm start`
@@ -46,7 +46,7 @@ This is because closures maintain references to their scope and all
 variables therein.  For example:
 
 ```javascript
-...
+
 ```
 
 Leaks like this will probably be spotted eventually if somebody's
@@ -215,7 +215,7 @@ usage over time.
 
 So let's try this with a leaky program and see what happens.
 
-   - run example 3
+![Tracking Size After GC](https://github.com/jedp/node-memwatch-demo/blob/master/doc/leak-gc-events.png)
 
 We can see clearly that the base heap usage only goes up and up.  The
 indicator `usage_trend` remains positive, and so looks like a good
@@ -249,6 +249,9 @@ Traversing the Heap
 -------------------
 
 use named constructors for heap data to be meaningful
+
+
+![Tracking Heap Allocations](https://github.com/jedp/node-memwatch-demo/blob/master/doc/leak-allocations.png)
 
 Notes
 -----

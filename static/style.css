@@ -52,7 +52,7 @@ table {
     border-spacing: 0;
 }
 
-/* 
+/*
  End of reset
  */
 
@@ -117,10 +117,8 @@ div {
   display: inline-block;
   width: 280px;
   border-radius: 12px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+/*  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); */
   padding: 10px;
-  background-color: #ccc;
 }
 
 
@@ -155,11 +153,14 @@ code, pre, tt, .data {
 }
 
 svg {
-    background-color: #ccc;
     border-radius: 12px;
     padding: 12px;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.display-box,
+svg {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: #ccc;
 }
 
 svg path {

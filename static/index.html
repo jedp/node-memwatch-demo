@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>node-gcstats</title>
+  <title>node-memwatch</title>
   <link rel="stylesheet" href="/style.css" type="text/css">
   <link href='http://fonts.googleapis.com/css?family=Belgrano' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Cousine:400,700' rel='stylesheet' type='text/css'>
@@ -34,7 +34,7 @@
 
     <div class='display'>
       <div class='display-box left events' style='display: none'>
-        <h3><code>gcstats</code> events</h3>
+        <h3>on-GC events</h3>
         <ul class='display-items'>
           <li class='currentBase'>Curr base <span class='data'/></li>
           <li class='estimatedBase'>Est base <span class='data'/></li>
@@ -81,7 +81,7 @@ head.js(
   {graph:     "/graph.js"},
   {client:    "/client.js"})
   .ready(function() {
-    $('body').noisy();
+     $('body').noisy();
   });
 </script>
 </html>
