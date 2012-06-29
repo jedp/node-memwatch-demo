@@ -3,23 +3,33 @@ Discovering and Finding Memory Leaks with `node-memwatch`
 
 Memory leaks are bad.  They are also notoriously hard to detect.
 
-[node-memwatch](https://github.com/lloyd/node-memwatch), seeks to
-help both with the detection of memory leaks and the identification of
-their source in Node.JS applications.
+We present [node-memwatch](https://github.com/lloyd/node-memwatch) as
+a tool to help detect and track down memory leaks.
+
+This document is the outline of a presentation to be given at
+[NodeConf 2012](http://nodeconf/).  It describes some examples of
+memory leaks and the problems they can cause, lists some well-known
+tools and methods for detecting and finding Node.JS memory leaks, and
+introduces `node-memwatch`, which we believe has some unique
+advantages.
 
 To run this demonstration:
 
 - Clone this repo (`git clone git://github.com/jedp/node-memwatch-demo.git`)
 - `npm install`
-- Edit `config.js`
+- Edit `config.js` (instructions inside)
 - `npm start`
 - Visit http://localhost:3000/
+
+Don't forget to kill the server if you're running in 'leak' mode or
+your computer will hate you!
 
 Memory Leaks?  So What?
 -----------------------
 
-Cool story, bro, but I've got 2 GB of RAM on this box.  That should be
-more than enough if I just restart from time to time, right?
+Cool story, bro, but I've got 2 GB of RAM on this box.  Why should I
+bother spending days tracking down hard-to-find leaks when I can just
+restart?
 
 Well, there are at least three things you should be concerned about:
 
@@ -70,16 +80,15 @@ characters](https://github.com/vvo/node/commit/e138f76ab243ba3579ac859f08261a721
 Tools for Finding Leaks
 -----------------------
 
-We need tools to help us find leaks.  There is a growing collection of
-good collection of tools for finding leaks in Node.JS applications.
-
-For starters, since this is a memory problem, we can look at `top` or
+Since this is a memory problem, we can start by looking at `top` or
 `htop` or some system utility to discover our memory footprint.
 
 Within Node itself, there is `process.memoryUsage()`, which will
 report Node's heap footprint.
 
-Additionally:
+But that won't get us far.  We need tools to help us find leaks.
+Happily, there is a growing collection of good collection of tools for
+finding leaks in Node.JS applications.
 
 - Jimb Esser's
   [node-mtrace](https://github.com/Jimbly/node-mtrace), which uses the
@@ -118,49 +127,49 @@ difficult to reproduce memory leaks that bite in long-running and
 heavily-loaded production environments.  Tools like `dtrace` and
 `libumem` are awe-inspiring, but only work on certain platforms.
 
-What We Want To Do
-------------------
+Goal of `node-memwatch`
+-----------------------
 
-We would like to have a platform-independent debugging library that
-can alert us when our programs might be leaking memory, and help us
-find where they are leaking.
+We would like to have a platform-independent debugging library
+requiring no instrumentation that can alert us when our programs might
+be leaking memory, and help us find where they are leaking.
+
+We want one function and two events, like so:
 
 We want a simple API using an `EventEmitter` like this:
 
 ```javascript
-foo.on('leak', function(leakData) {
- // Looks like there's a leak!  See leakData for details
+var memwatch = require('memwatch');
+memwatch.on('stats', function(stats) {
+  // do something with post-gc memory usage stats
 });
-```
+````
 
-And in order to follow the memory usage of a Node.JS application, it
-is sometimes desirable to force V8 to perform a full garbage
-collection and compaction, after which we can determine the actual
-memory usage.  So another important API call would instruct V8 to
-perform a full GC, and asynchronously return statistics about the heap
-before any new objects have been allocated:
+````javascript
+memwatch.on('leak', fucntion(info) {
+  // look at info to find out about top contributors
+});
 
+A way to trigger full garbage collection (and heap compaction):
 ```javascript
-foo.gc(function(data) {
-  // We forced GC and now can look at clean memory data
-});
+memwatch.forceGC();
 ```
+
+We will explain why we want these two callbacks and one function.  But
+first, let's begin at the beginning.
 
 Tracking Memory Usage
 ---------------------
 
-Ok, we know what we want.  Now let's return to the problem of
-debugging memory leaks in Node.JS.
-
-A simple approach to detecting leaks would be to repeatedly call
-`memoryUsage()` at a fixed interval and see if there's a positive
-delta in heap allocations.
+Starting with the most basic approach, a simple way to look for leaks
+would be to repeatedly call `memoryUsage()` at a fixed interval and
+see if there's a positive delta in heap allocations.
 
 To try this we'll make a simple EventEmitter that emits the memory
 usage every minute or so, and plot the usage over time.  We'll write a
 simple, well-behaved program and track its memory usage:
 
-  - run example 1 
+  - run example 1
 
 Ok, I can see the memory usage spiking up and down - but could I know
 for certain that this program was not leaking?  How many days would it
@@ -257,5 +266,5 @@ use named constructors for heap data to be meaningful
 Notes
 -----
 
-buffers? 
+buffers?
 since node 0.4, buffers are allocated using pure JS objects ouside the V8 heap
