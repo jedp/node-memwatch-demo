@@ -215,7 +215,7 @@ usage over time.
 
 So let's try this with a leaky program and see what happens.
 
-![Tracking Size After GC](https://github.com/jedp/node-memwatch-demo/blob/master/doc/leak-gc-events.png)
+![leak-gc-events](/doc/leak-gc-events.png)
 
 We can see clearly that the base heap usage only goes up and up.  The
 indicator `usage_trend` remains positive, and so looks like a good
@@ -251,7 +251,7 @@ Traversing the Heap
 use named constructors for heap data to be meaningful
 
 
-![Tracking Heap Allocations](https://github.com/jedp/node-memwatch-demo/blob/master/doc/leak-allocations.png)
+![leak-allocations](/doc/leak-allocations.png)
 
 Notes
 -----
