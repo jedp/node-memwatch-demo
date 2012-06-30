@@ -326,8 +326,6 @@ The contents of `diff` will look something like this:
 }
 ```
 
-// XXX add timestamp to before/after?
-
 `HeapDiff` triggers a full GC before taking its samples, so the data
 won't be full of a lot of junk.  `memwatch`'s event emitters will not
 notify of `HeapDiff` GC events, so you can safely put `HeapDiff` calls
