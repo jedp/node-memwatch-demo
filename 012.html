@@ -11,10 +11,6 @@ function navigate(e) {
         window.location = "011" + ".html";
         return false;
     }
-    if (keynum == 13 || keynum == 32) {
-        window.location = "013" + ".html";
-        return false;
-    }
     if (keynum == 73 || keynum == 105) {
         window.location = "index.html";
         return false;
@@ -24,32 +20,23 @@ function navigate(e) {
 </script>
 </head>
 <body onkeypress="return navigate(event)">
-<pre>                            Finding Leaks
+<pre>
+
+
+
+
+
+                          Finding Examples
      
-     Now that we have a leak detector, we want a leak identifier.
-     
-     By comparing consecutive heap snapshots, we can produce a heap diff.
-     
-     {
-       &quot;before&quot;: { &quot;nodes&quot;: 11625, &quot;size_bytes&quot;: 1869904, &quot;size&quot;: &quot;1.78 mb&quot; },
-       &quot;after&quot;:  { &quot;nodes&quot;: 21435, &quot;size_bytes&quot;: 2119136, &quot;size&quot;: &quot;2.02 mb&quot; },
-     
-       &quot;change&quot;: { &quot;size_bytes&quot;: 249232, &quot;size&quot;: &quot;243.39 kb&quot;, &quot;freed_nodes&quot;: 197,
-         &quot;allocated_nodes&quot;: 10007,
-         &quot;details&quot;: [
-           { &quot;what&quot;: &quot;Code&quot;,
-            &quot;size_bytes&quot;: -55296,  &quot;size&quot;: &quot;-54 kb&quot;,    &quot;+&quot;: 1,    &quot;-&quot;: 57
-           },
-           { &quot;what&quot;: &quot;String&quot;,
-             &quot;size_bytes&quot;: -2120,  &quot;size&quot;: &quot;-2.07 kb&quot;,  &quot;+&quot;: 3,    &quot;-&quot;: 62
-           },
-           { &quot;what&quot;: &quot;Array&quot;,
-             &quot;size_bytes&quot;: 66687,  &quot;size&quot;: &quot;65.13 kb&quot;,  &quot;+&quot;: 4,    &quot;-&quot;: 78
-           },
-           { &quot;what&quot;: &quot;LeakingClass&quot;, 
-             &quot;size_bytes&quot;: 239952, &quot;size&quot;: &quot;234.33 kb&quot;, &quot;+&quot;: 9998, &quot;-&quot;: 0
-           }
-         ]
-       }
+     - tbd
+
+
+
+
+
+
+
+
+
 </pre>
 </body>

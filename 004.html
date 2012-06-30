@@ -8,7 +8,7 @@ function navigate(e) {
         ? e.keyCode
         : e.which;
     if (keynum == 8) {
-        window.location = "003" + ".html";
+        window.location = "003z" + ".html";
         return false;
     }
     if (keynum == 13 || keynum == 32) {
@@ -25,19 +25,19 @@ function navigate(e) {
 </head>
 <body onkeypress="return navigate(event)">
 <pre>
-
-
-
-                          Sources Of Leaks
+                       Tools For Finding Leaks
      
-     * Your own code
+     * Jimb Esser: https://github.com/Jimbly/node-mtrace
      
-     * Other people's code
+     * Dave Pacheco: https://github.com/davepacheco/node-heap-dump
      
-       Story time ...
-
-
-
+     * Danny Coates: https://github.com/dannycoates/node-inspector
+     
+     * Felix Gnass: http://fgnass.posterous.com/finding-memory-leaks-in-nodejs-applications
+     
+     * Felix GeisendÃ¶rfer: https://github.com/felixge/node-memory-leak-tutorial
+     
+     * Joyent: http://dtrace.org/blogs/bmc/2012/05/05/debugging-node-js-memory-leaks/
 
 
 

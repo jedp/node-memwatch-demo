@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>006d</title>
+<title>003d</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 function navigate(e) {
@@ -8,11 +8,11 @@ function navigate(e) {
         ? e.keyCode
         : e.which;
     if (keynum == 8) {
-        window.location = "006c" + ".html";
+        window.location = "003c" + ".html";
         return false;
     }
     if (keynum == 13 || keynum == 32) {
-        window.location = "006z" + ".html";
+        window.location = "003z" + ".html";
         return false;
     }
     if (keynum == 73 || keynum == 105) {
@@ -24,23 +24,23 @@ function navigate(e) {
 </script>
 </head>
 <body onkeypress="return navigate(event)">
-<pre>                        Goal of node-memwatch
+<pre>                          Sources Of Leaks
      
-     We would like to have a platform-independent debugging library
-     requiring no instrumentation that can alert us when our programs might
-     be leaking memory, and help us find where they are leaking.
+     * Your own code (closures, event listeners)
      
-     The API will provide three things:
+     * Or ... not your own code
      
-     * An on-leak emitter
+     Story time ... load testing http_forward.js
      
-     * An on-GC stats emitter
+     * Two days of bisection
      
-     * A heap diff class
+     * The solution:
+       
+        res.on('end', function() {
+          res.removeAllListeners();
+          res.destroy();
+        });
      
-
-
-
 
 </pre>
 </body>

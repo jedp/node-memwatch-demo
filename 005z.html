@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>005</title>
+<title>005z</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 function navigate(e) {
@@ -8,11 +8,11 @@ function navigate(e) {
         ? e.keyCode
         : e.which;
     if (keynum == 8) {
-        window.location = "004" + ".html";
+        window.location = "005d" + ".html";
         return false;
     }
     if (keynum == 13 || keynum == 32) {
-        window.location = "005b" + ".html";
+        window.location = "006" + ".html";
         return false;
     }
     if (keynum == 73 || keynum == 105) {
@@ -32,15 +32,16 @@ function navigate(e) {
      
      The API will provide three things:
      
-
-
-
-
-
-
-
-
-
-
+     * An on-leak emitter
+     
+     * An on-GC stats emitter
+     
+     * A heap diff class
+     
+     * A function to trigger GC
+     
+     Four things.
+     
+     Onward to the beginning.
 </pre>
 </body>

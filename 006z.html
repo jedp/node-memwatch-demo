@@ -8,7 +8,7 @@ function navigate(e) {
         ? e.keyCode
         : e.which;
     if (keynum == 8) {
-        window.location = "006d" + ".html";
+        window.location = "006b" + ".html";
         return false;
     }
     if (keynum == 13 || keynum == 32) {
@@ -24,24 +24,26 @@ function navigate(e) {
 </script>
 </head>
 <body onkeypress="return navigate(event)">
-<pre>                        Goal of node-memwatch
+<pre>                        Tracking Memory Usage
      
-     We would like to have a platform-independent debugging library
-     requiring no instrumentation that can alert us when our programs might
-     be leaking memory, and help us find where they are leaking.
+     * At intervals?: process.memoryUsage()
      
-     The API will provide three things:
+     * On GC: V8:AddGCEpilogueCallback FTW
      
-     * An on-leak emitter
+     The first part of our API:  A stats emitter on GC.
      
-     * An on-GC stats emitter
+     * memwatch.on('stats', function(stats) { ... });
      
-     * A heap diff class
-     
-     * A function to trigger GC
-     
-     Four things.
-     
-     Onward to the beginning.
+       // stats will be like
+       {
+         &quot;num_full_gc&quot;: 17,
+         &quot;num_inc_gc&quot;: 8,
+         &quot;heap_compactions&quot;: 8,
+         &quot;estimated_base&quot;: 2592568,
+         &quot;current_base&quot;: 2592568,
+         &quot;min&quot;: 2499912,
+         &quot;max&quot;: 2592568,
+         &quot;usage_trend&quot;: 0
+       }
 </pre>
 </body>

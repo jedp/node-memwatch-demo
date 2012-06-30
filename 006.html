@@ -8,7 +8,7 @@ function navigate(e) {
         ? e.keyCode
         : e.which;
     if (keynum == 8) {
-        window.location = "005" + ".html";
+        window.location = "005z" + ".html";
         return false;
     }
     if (keynum == 13 || keynum == 32) {
@@ -24,14 +24,14 @@ function navigate(e) {
 </script>
 </head>
 <body onkeypress="return navigate(event)">
-<pre>                        Goal of node-memwatch
+<pre>                        Tracking Memory Usage
      
-     We would like to have a platform-independent debugging library
-     requiring no instrumentation that can alert us when our programs might
-     be leaking memory, and help us find where they are leaking.
+     * At intervals?: process.memoryUsage()
      
-     The API will provide three things:
-     
+
+
+
+
 
 
 

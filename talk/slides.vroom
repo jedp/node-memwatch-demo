@@ -1,0 +1,194 @@
+# This is a sample Vroom input file. It should help you get started.
+#
+#
+# Edit this file with your content. Then run `vroom --vroom` to start
+# the show!
+#
+# See `perldoc Vroom` for complete details.
+#
+---- config
+# Basic config options.
+title: Vroom!
+indent: 5
+height: 18
+width: 69
+#auto_size: 1
+skip: 0
+
+# The following options are for Gvim usage.
+vim: gvim
+gvimrc: |
+  set fuopt=maxhorz,maxvert
+  set guioptions=egmLtT
+  set guifont=Monospace\ 14
+  set guicursor=a:blinkon0-ver25-Cursor
+  colorscheme solarized
+  set background=light
+
+---- center
+node-memwatch
+
+Detecting and Finding Memory Leaks in Node.JS
+
+by Lloyd Hilaiel  https://github.com/lloyd/
+and Jed Parsons  https://github.com/jedp/
+
+----
+== Memory Leaks -  So What?
+
++* Performance: As heap size grows, V8 becomes sluggish
+
++* Other Failures: Leaks can be a vector for othe types of failure if 
+   leaky code is holding references to finite resources (e.g., file
+   descriptors)
+
++* Shame: Your stuff will crash, and probably when you're at your most popular.
+
+----
+== Sources Of Leaks
+
+* Your own code (closures, event listeners)
+
++* Or ... not your own code
+
+Story time ... load testing http_forward.js
+
++* Two days of bisection
+
++* The solution:
+  
+   res.on('end', function() {
+     res.removeAllListeners();
+     res.destroy();
+   });
+
++* The culprit?  node/lib/http.js@e138f76a
+
+   @@ -1127,5 +1127,5 @@ function ClientRequest(options, cb) {
+     self.path = options.path || '/';
+     if (cb) {
+   -    self.on('response', cb);
+   +    self.once('response', cb);
+     }
+
+----
+== Tools For Finding Leaks
+
+* Jimb Esser: https://github.com/Jimbly/node-mtrace
+
+* Dave Pacheco: https://github.com/davepacheco/node-heap-dump
+
+* Danny Coates: https://github.com/dannycoates/node-inspector
+
+* Felix Gnass: http://fgnass.posterous.com/finding-memory-leaks-in-nodejs-applications
+
+* Felix Geisendörfer: https://github.com/felixge/node-memory-leak-tutorial
+
+* Joyent: http://dtrace.org/blogs/bmc/2012/05/05/debugging-node-js-memory-leaks/
+
+----
+== Goal of node-memwatch
+
+We would like to have a platform-independent debugging library
+requiring no instrumentation that can alert us when our programs might
+be leaking memory, and help us find where they are leaking.
+
+The API will provide three things:
+
++* An on-leak emitter
+
++* An on-GC stats emitter
+
++* A heap diff class
+
++* A function to trigger GC
+
+Four things.
+
+Onward to the beginning.
+----
+== Tracking Memory Usage
+
+* At intervals?: process.memoryUsage()
+
++* On GC: V8:AddGCEpilogueCallback FTW
+
+The first part of our API:  A stats emitter on GC.
+
++* memwatch.on('stats', function(stats) { ... });
+
+  // stats will be like
+  {
+    "num_full_gc": 17,
+    "num_inc_gc": 8,
+    "heap_compactions": 8,
+    "estimated_base": 2592568,
+    "current_base": 2592568,
+    "min": 2499912,
+    "max": 2592568,
+    "usage_trend": 0
+  }
+---- center
+
+== Example 1
+
+Memory usage in a well-behaved (?) application
+
+---- center
+
+== Example 2
+
+Memory usage in a leaky (?) application
+
+----
+== Leak alerts
+
+* Usage trends FTW
+
+If heap allocation has grown through five consecutive GCs, a 'leak' event is emitted.
+
++* memwatch.on('leak', function(info) { ... });
+
+  // info will be like:
+  { start: Fri, 29 Jun 2012 14:12:13 GMT,
+    end: Fri, 29 Jun 2012 14:12:33 GMT,
+    growth: 67984,
+    reason: 'heap growth over 5 consecutive GCs (20s) - 11.67 mb/hr' }
+
+----
+== Finding Leaks
+
+Now that we have a leak detector, we want a leak identifier. By comparing
+consecutive heap snapshots, we can produce a heap diff.
+
+* var hd = new memwatch.HeapDiff();
+  // do stuff ...
+  var diff = hd.end()
+
+  // diff will be like:
+  {
+    "before": { "nodes": 11625, "size_bytes": 1869904, "size": "1.78 mb" },
+    "after":  { "nodes": 21435, "size_bytes": 2119136, "size": "2.02 mb" },
+    "change": { "size_bytes": 249232, "size": "243.39 kb", "freed_nodes": 197,
+      "allocated_nodes": 10007,
+      "details": [
+        { "what": "String",
+          "size_bytes": -2120,  "size": "-2.07 kb",  "+": 3,    "-": 62
+        },
+        { "what": "Array",
+          "size_bytes": 66687,  "size": "65.13 kb",  "+": 4,    "-": 78
+        },
+        { "what": "LeakingClass", 
+          "size_bytes": 239952, "size": "234.33 kb", "+": 9998, "-": 0
+        }
+      ]
+    }
+---- center
+== Example 3
+
+Names of the Guilty
+
+----
+== Finding Examples
+
+- tbd

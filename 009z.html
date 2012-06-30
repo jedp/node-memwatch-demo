@@ -25,19 +25,19 @@ function navigate(e) {
 </head>
 <body onkeypress="return navigate(event)">
 <pre>
-
-
-
-
-                           Detecting Leaks
+                             Leak alerts
      
-     * Analysis and trends
+     * Usage trends FTW
      
-     * Automate the task of watching
-
-
-
-
+     If heap allocation has grown through five consecutive GCs, a 'leak' event is emitted.
+     
+     * memwatch.on('leak', function(info) { ... });
+     
+       // info will be like:
+       { start: Fri, 29 Jun 2012 14:12:13 GMT,
+         end: Fri, 29 Jun 2012 14:12:33 GMT,
+         growth: 67984,
+         reason: 'heap growth over 5 consecutive GCs (20s) - 11.67 mb/hr' }
 
 
 

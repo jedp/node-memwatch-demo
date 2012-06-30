@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>013</title>
+<title>003c</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 function navigate(e) {
@@ -8,11 +8,11 @@ function navigate(e) {
         ? e.keyCode
         : e.which;
     if (keynum == 8) {
-        window.location = "012" + ".html";
+        window.location = "003b" + ".html";
         return false;
     }
     if (keynum == 13 || keynum == 32) {
-        window.location = "014" + ".html";
+        window.location = "003d" + ".html";
         return false;
     }
     if (keynum == 73 || keynum == 105) {
@@ -24,16 +24,16 @@ function navigate(e) {
 </script>
 </head>
 <body onkeypress="return navigate(event)">
-<pre>
-
-
-
-
-
-                              Example 3
-
-                         Names of the Guilty
-
+<pre>                          Sources Of Leaks
+     
+     * Your own code (closures, event listeners)
+     
+     * Or ... not your own code
+     
+     Story time ... load testing http_forward.js
+     
+     * Two days of bisection
+     
 
 
 
