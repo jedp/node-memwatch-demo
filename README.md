@@ -80,6 +80,10 @@ characters](https://github.com/vvo/node/commit/e138f76ab243ba3579ac859f08261a721
 Tools for Finding Leaks
 -----------------------
 
+The classic approach is at this point to make a huge pot of coffee,
+lock yourself in a closet, and start bisecting code for hours or days
+until you find the offender.
+
 Since this is a memory problem, we can start by looking at `top` or
 `htop` or some system utility to discover our memory footprint.
 
@@ -134,29 +138,41 @@ We would like to have a platform-independent debugging library
 requiring no instrumentation that can alert us when our programs might
 be leaking memory, and help us find where they are leaking.
 
-We want one function and two events, like so:
+The API will provide three main things:
 
-We want a simple API using an `EventEmitter` like this:
+- A `'leak'` event emitter
 
-```javascript
-var memwatch = require('memwatch');
-memwatch.on('stats', function(stats) {
-  // do something with post-gc memory usage stats
-});
-````
+  ```javascript
+  memwatch.on('leak', function(info) {
+    // look at info to find out about top contributors
+  });
+  ```
 
-````javascript
-memwatch.on('leak', fucntion(info) {
-  // look at info to find out about top contributors
-});
+- A `'stats'` event emitter
 
-A way to trigger full garbage collection (and heap compaction):
-```javascript
-memwatch.forceGC();
-```
+  ```javascript
+  var memwatch = require('memwatch');
+  memwatch.on('stats', function(stats) {
+    // do something with post-gc memory usage stats
+  });
+  ````
 
-We will explain why we want these two callbacks and one function.  But
-first, let's begin at the beginning.
+- A heap diff class
+
+  ```javascript
+  var hd = new memwatch.HeapDiff();
+  // ... stuff happens ...
+  var diff = hd.end();
+  ```
+
+- There is also a function to trigger garbage collection which can be
+  useful in testing.
+
+  ```javascript
+  var stats = memwatch.gc();
+  ```
+
+This is what we want to arrive at.  Now let's begin at the beginning.
 
 Tracking Memory Usage
 ---------------------
@@ -171,47 +187,26 @@ simple, well-behaved program and track its memory usage:
 
   - run example 1
 
-Ok, I can see the memory usage spiking up and down - but could I know
-for certain that this program was not leaking?  How many days would it
-have to run for to produce a useful trend?
+Heap usage spikes up and down chaotically, and it may be difficult to
+find a meaningful trend.  How long will we have to wait to know that
+we have a leak?  How long to convince ourselves that we don't have a
+leak?
 
-Following Post-GC Heap Statistics
----------------------------------
 
-Sampling at intervals like this from a chaotic graph makes it
-difficult to see patterns without a lot of time and data to smooth
-over the noise.  But we can do better.  We can sample memory usage
-after a full garbage-collection and memory compaction.
+`memwatch.on('stats', ...)`: Post-GC Heap Statistics
+----------------------------------------------------
 
-V8 provides a nice post-gc hook, `V8::AddGCEpilogueCallback`, that
-lets us execute some code before the js thread has a chance to
-allocate any new objects.  So this gives us a clearer view of
-the heap.
+We can do a lot better.  We can sample memory usage directlyafter a
+full garbage-collection and memory compaction, before any new JS
+objects have been allocated.
 
-We'll make a simple native module that simply sends us some heap
-size statistics every time GC occurs.  We'll emit this data up to our
-graph whenever it arrives.
+We'll make a native module utilizing V8's post-gc hook,
+`V8::AddGCEpilogueCallback`, and gather heap usage statistics every
+time GC occurs.  We'll emit this data up to our graph whenever it
+arrives.
 
-  - run example 2
-
-This seems promising.  We can see the base memory usage over time much
-more clearly.
-
-Because Node and V8 have complex heuristics governing the selection of
-the time at which to perform garbage colleciton, we provide a way to
-manually trigger a full GC and compaction so that we can speed things
-along a bit.  Otherwise, we may have to wait a long time under heavy
-loads until V8 and Node think it's a safe time to execute GC with
-minimal impact on performance.
-
-Trending Heuristics
--------------------
-
-In this example, we introduce a leaky function to see how our profiler
-behaves.
-
-We can add some analysis to this data and try to establish a trend in
-usage over time.
+This is the first part of our API, the `'stats'` event emitter.  It
+will emit a message containing the following:
 
 - usage_trend
 - current_base
@@ -222,49 +217,121 @@ usage over time.
 - min
 - max
 
+
+  - run example 2
+
+This seems promising.  We can see the base memory usage over time much
+more clearly.
+
+We can also prove that `memwatch` itself doesn't leak memory.
+
+
+`memwatch.on('leak', ...)`: Heap Allocation Trends
+--------------------------------------------------
+
+In this example, we introduce a leaky function to see how our profiler
+behaves.
+
+We can add some analysis to this data and try to establish a trend in
+usage over time.
+
 So let's try this with a leaky program and see what happens.
 
 ![leak-gc-events](https://github.com/jedp/node-memwatch-demo/raw/master/doc/leak-gc-events.png)
 
 We can see clearly that the base heap usage only goes up and up.  The
-indicator `usage_trend` remains positive, and so looks like a good
-candidate to be a sentinel to trigger a warning that we may have a
-leak.
+indicator `usage_trend` remains positive, showing us that we're
+allocating more and more heap over time.
 
-Where Is The Leak?
-------------------
+`memwatch` will keep an eye on this for you, and emit a `'leak'` event
+if heap allocation has grown through five consecutive GCs.  It tells
+you in nice, human-readable form what's going on.
 
-Once we have a leak detector, we need a leak identifier.  How do we
-know where to look?
+```javascript
+{ start: Fri, 29 Jun 2012 14:12:13 GMT,
+  end: Fri, 29 Jun 2012 14:12:33 GMT,
+  growth: 67984,
+  reason: 'heap growth over 5 consecutive GCs (20s) - 11.67 mb/hr' }
+```
 
-The classic approach is at this point to make a huge pot of coffee,
-lock yourself in a closet, and start bisecting code for hours or days
-until you find the offender.
+`memwatch.HeapDiff()`: Finding Leaks
+------------------------------------
 
-Depending on your deployment and environment, you could try to use one
-of the tools we discussed above (`dtrace`, `node-inspector`,
-`v8-profiler`, `node-mstats`, `node-heap-dump`, etc.).
+Now that we have a leak detector, we want a leak identifier.
 
-The main thing here is to be able to get the names of the guilty
-parties quickly.  But again, these approaches have limitations, such
-as platform-dependence or context restrictions, and may not be
-suitable or available for debugging in all situations.
+By traversing the V8 heap graph, `memwatch` can collect the names and
+allocation counts for all objects on the heap.  By comparing two
+successive heap snapshots, we can produce a diff.
 
-We want to have the benefit of progressive heap diffing, but we also
-want the programs to do the work of monitoring themselves and telling
-us when something might be wrong.
+The API is:
 
-Traversing the Heap
--------------------
+javascript```
+var hd = new memwatch.HeapDiff();
 
-use named constructors for heap data to be meaningful
+// do something ...
 
+var diff = hd.end();
+```
+
+The contents of `diff` will look something like this:
+
+```javascript
+{
+  "before": {
+    "nodes": 11625,
+    "size_bytes": 1869904,
+    "size": "1.78 mb"
+  },
+  "after": {
+    "nodes": 21435,
+    "size_bytes": 2119136,
+    "size": "2.02 mb"
+  },
+  "change": {
+    "size_bytes": 249232,
+    "size": "243.39 kb",
+    "freed_nodes": 197,
+    "allocated_nodes": 10007,
+    "details": [
+      {
+        "what": "Array",
+        "size_bytes": 66688,
+        "size": "65.13 kb",
+        "+": 4,
+        "-": 78
+      },
+      {
+        "what": "Code",
+        "size_bytes": -55296,
+        "size": "-54 kb",
+        "+": 1,
+        "-": 57
+      },
+      {
+        "what": "LeakingClass",
+        "size_bytes": 239952,
+        "size": "234.33 kb",
+        "+": 9998,
+        "-": 0
+      },
+      {
+        "what": "String",
+        "size_bytes": -2120,
+        "size": "-2.07 kb",
+        "+": 3,
+        "-": 62
+      }
+    ]
+  }
+}
+```
+
+// XXX add timestamp to before/after?
+
+`HeapDiff` triggers a full GC before taking its samples, so the data
+won't be full of a lot of junk.  `memwatch`'s event emitters will not
+notify of `HeapDiff` GC events, so you can safely put `HeapDiff` calls
+in your `'stats'` handler.
 
 ![heap-allocations](https://github.com/jedp/node-memwatch-demo/raw/master/doc/leak-allocations.png)
 
-
-Notes
------
-
-buffers?
-since node 0.4, buffers are allocated using pure JS objects ouside the V8 heap
