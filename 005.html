@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>005</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "004" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "006" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeypress="return navigate(event)">
+<pre>
+                       Tools For Finding Leaks
+     
+     * Jimb Esser: https://github.com/Jimbly/node-mtrace
+     
+     * Dave Pacheco: https://github.com/davepacheco/node-heap-dump
+     
+     * Danny Coates: https://github.com/dannycoates/node-inspector
+     
+     * Felix Gnass: http://fgnass.posterous.com/finding-memory-leaks-in-nodejs-applications
+     
+     * Felix GeisendÃ¶rfer: https://github.com/felixge/node-memory-leak-tutorial
+     
+     * Joyent: http://dtrace.org/blogs/bmc/2012/05/05/debugging-node-js-memory-leaks/
+
+
+
+
+</pre>
+</body>

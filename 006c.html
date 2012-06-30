@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>006c</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "006b" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "006d" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeypress="return navigate(event)">
+<pre>                        Goal of node-memwatch
+     
+     We would like to have a platform-independent debugging library
+     requiring no instrumentation that can alert us when our programs might
+     be leaking memory, and help us find where they are leaking.
+     
+     The API will provide three things:
+     
+     * An on-leak emitter
+     
+     * An on-GC stats emitter
+     
+
+
+
+
+
+
+</pre>
+</body>

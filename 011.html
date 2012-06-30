@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>011</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "010" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "012" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeypress="return navigate(event)">
+<pre>
+
+
+
+                             Leak alerts
+     
+     If heap allocation has grown through five consecutive GCs, a 'leak' event is emitted.
+     
+       { start: Fri, 29 Jun 2012 14:12:13 GMT,
+         end: Fri, 29 Jun 2012 14:12:33 GMT,
+         growth: 67984,
+         reason: 'heap growth over 5 consecutive GCs (20s) - 11.67 mb/hr' }
+
+
+
+
+
+
+</pre>
+</body>
