@@ -189,6 +189,43 @@ consecutive heap snapshots, we can produce a heap diff.
 Names of the Guilty
 
 ----
-== Finding Examples
+== Future Work
 
-- tbd
+Provide examples of instances of leaked object.
+
+Something like:
+
+  {"what": "LeakyClass",
+   "size_bytes": 123456, "size": "123.45 kb", "+": 9998, "-": 0,
+   "examples": [
+     "Local variable 'foo'",
+     "Index 42 in array 'bar'",
+     "Closure with code ..."
+   ]
+  }
+
+----
+== Summary
+
+node-memwatch provides
+
+- Accurate memory reporting,
+
+    memwatch.on('stats', function(stats) { ... });
+
+- Notifications of probable leaks,
+
+    memwatch.on('leak', function(info) { ... });
+
+- And heap diffing.
+
+    var hd = new memwatch.HeapDiff();
+    // ...
+    var diff = hd.end();
+
+- It is platform-independent;
+
+- It requires no extra instrumentation.
+
+Please fork! http://github.com/lloyd/heap-memwatch
+

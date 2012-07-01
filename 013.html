@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>013</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "012" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeypress="return navigate(event)">
+<pre>                               Summary
+     
+     node-memwatch provides
+     
+     - Accurate memory reporting,
+     
+         memwatch.on('stats', function(stats) { ... });
+     
+     - Notifications of probable leaks,
+     
+         memwatch.on('leak', function(info) { ... });
+     
+     - And heap diffing.
+     
+         var hd = new memwatch.HeapDiff();
+         // ...
+         var diff = hd.end();
+     
+     - It is platform-independent;
+     
+     - It requires no extra instrumentation.
+     
+     Please fork! http://github.com/lloyd/heap-memwatch
+</pre>
+</body>

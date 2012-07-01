@@ -11,6 +11,10 @@ function navigate(e) {
         window.location = "011" + ".html";
         return false;
     }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "013" + ".html";
+        return false;
+    }
     if (keynum == 73 || keynum == 105) {
         window.location = "index.html";
         return false;
@@ -21,20 +25,20 @@ function navigate(e) {
 </head>
 <body onkeypress="return navigate(event)">
 <pre>
-
-
-
-
-
-                          Finding Examples
+                             Future Work
      
-     - tbd
-
-
-
-
-
-
+     Provide examples of instances of leaked object.
+     
+     Something like:
+     
+       {&quot;what&quot;: &quot;LeakyClass&quot;,
+        &quot;size_bytes&quot;: 123456, &quot;size&quot;: &quot;123.45 kb&quot;, &quot;+&quot;: 9998, &quot;-&quot;: 0,
+        &quot;examples&quot;: [
+          &quot;Local variable 'foo'&quot;,
+          &quot;Index 42 in array 'bar'&quot;,
+          &quot;Closure with code ...&quot;
+        ]
+       }
 
 
 
