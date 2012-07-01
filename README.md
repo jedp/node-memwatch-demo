@@ -56,7 +56,13 @@ This is because closures maintain references to their scope and all
 variables therein.  For example:
 
 ```javascript
-
+function Leaky() {
+  var leaked = new InnocentBystander();
+  var x = 42;
+  return function() {
+    return x;
+  };
+}
 ```
 
 Leaks like this will probably be spotted eventually if somebody's
@@ -332,4 +338,23 @@ notify of `HeapDiff` GC events, so you can safely put `HeapDiff` calls
 in your `'stats'` handler.
 
 ![heap-allocations](https://github.com/jedp/node-memwatch-demo/raw/master/doc/leak-allocations.png)
+
+
+Future Work
+-----------
+
+Our next steps will be to provide a list of a few example instances of
+a leaked object - names of variables it's been assigned to, index in
+an array, closure code, etc.
+
+Summary
+-------
+
+With `node-gcstats` we present
+
+- Accurate memory usage tracking
+- Notifications about probable leaks
+- A means to produce a heap diff
+- That is cross-platform
+- And that does not require any extra instrumentation
 
