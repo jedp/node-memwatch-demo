@@ -155,7 +155,7 @@ The API will provide three main things:
   memwatch.on('stats', function(stats) {
     // do something with post-gc memory usage stats
   });
-  ````
+  ```
 
 - A heap diff class
 
@@ -265,7 +265,7 @@ successive heap snapshots, we can produce a diff.
 
 The API is:
 
-javascript```
+```javascript
 var hd = new memwatch.HeapDiff();
 
 // do something ...
