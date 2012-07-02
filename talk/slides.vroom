@@ -34,7 +34,10 @@ by Lloyd Hilaiel  https://github.com/lloyd/
 and Jed Parsons  https://github.com/jedp/
 
 
-For the impatient: https://github.com/lloyd/node-memwatch
+[For the impatient]
+
+https://github.com/lloyd/node-memwatch
+npm install memwatch
 
 ----
 == Memory Leaks -  So What?
