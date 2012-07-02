@@ -3,7 +3,7 @@ module.exports = {
    * leak
    *        (boolean)  Set to true to leak memory
    */
-  leak: true,
+  leak: false,
 
   /*
    * hdInterval
