@@ -33,6 +33,9 @@ Detecting and Finding Memory Leaks in Node.JS
 by Lloyd Hilaiel  https://github.com/lloyd/
 and Jed Parsons  https://github.com/jedp/
 
+
+For the impatient: https://github.com/lloyd/node-memwatch
+
 ----
 == Memory Leaks -  So What?
 
