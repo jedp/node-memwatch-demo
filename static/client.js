@@ -45,16 +45,16 @@ function updateGCDataList(stats) {
   $('.heapCompactions .data').text(stats.heap_compactions);
 }
 socket.on('post-full-gc-sample', function(data) {
-  $('.currentBase .data').text(formatNumber(data.stats.current_base));
-  $('.estimatedBase .data').text(formatNumber(data.stats.estimated_base));
-  updateGCDataList(data.stats);
+  $('.currentBase .data').text(formatNumber(data.current_base));
+  $('.estimatedBase .data').text(formatNumber(data.estimated_base));
+  updateGCDataList(data);
   Graph.addGcData('full', data);
 });
 
 socket.on('post-incremental-gc-sample', function(data) {
-  $('.currentBase .data').text(formatNumber(data.stats.current_base));
-  $('.estimatedBase .data').text(formatNumber(data.stats.estimated_base));
-  updateGCDataList(data.stats);
+  $('.currentBase .data').text(formatNumber(data.current_base));
+  $('.estimatedBase .data').text(formatNumber(data.estimated_base));
+  updateGCDataList(data);
   Graph.addGcData('incremental', data);
 });
 

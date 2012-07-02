@@ -1,7 +1,6 @@
 const express = require('express'),
       app = express.createServer(),
       io = require('socket.io').listen(app),
-      gc = require('gcstats'),
       config = require('./config'),
       memwatch = require('memwatch'),
       worker = require('./worker');
@@ -35,7 +34,7 @@ io.sockets.on('connection', function(socket) {
   socket.on('message', function(message) {
     switch (message) {
       case "do_gc":
-        gc.gc();
+        memwatch.gc();
         break;
 
       case "add_load":
@@ -97,18 +96,16 @@ setInterval(function() {
 }, 333);
 
 // and also emit post-gc stats
-var skipOne = true;
-gc.on('gc', function(data) {
-  data.stats = gc.stats();
-  if ((Date.now() - lastHD) > config.hdInterval) {
-    updateHeapDiff(hd.end());
-    hd = new memwatch.HeapDiff();
-    lastHD = Date.now();
-    io.sockets.emit('heap-allocations', topHeapAllocations());
+memwatch.on('stats', function(data) {
+  if (data.type === 'inc') {
+    io.sockets.emit('post-incremental-gc-sample', data);
+  } else {
+    if ((Date.now() - lastHD) > config.hdInterval) {
+      updateHeapDiff(hd.end());
+      hd = new memwatch.HeapDiff();
+      lastHD = Date.now();
+      io.sockets.emit('heap-allocations', topHeapAllocations());
+    }
+    io.sockets.emit('post-full-gc-sample', data);
   }
-  io.sockets.emit('post-full-gc-sample', data);
-});
-gc.on('gc_incremental', function(data) {
-  data.stats = gc.stats();
-  io.sockets.emit('post-incremental-gc-sample', data);
 });

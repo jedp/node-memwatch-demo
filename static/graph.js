@@ -72,11 +72,11 @@ window.Graph = {};
     //               max:              { bytes: bytes, when: Date } }
     //
     // convert all units to MB
-    currentBase = gcData.stats.current_base / MB;
-    estimatedBase = gcData.stats.estimated_base / MB;
-    var usage_trend = gcData.stats.usageTrend;
+    currentBase = gcData.current_base / MB;
+    estimatedBase = gcData.estimated_base / MB;
+    var usage_trend = gcData.usageTrend;
 
-    heapLeast = Math.min(heapLeast, gcData.stats.current_base / MB);
+    heapLeast = Math.min(heapLeast, gcData.current_base / MB);
     if (type === 'full') {
       nextFullSample = currentBase;
     }

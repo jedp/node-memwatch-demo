@@ -6,8 +6,7 @@
   "dependencies": {
     "express": "2.5.10",
     "socket.io": "0.9.6",
-    "node-gcstats": "git://github.com/lloyd/node-memwatch#6e59723675627372356e5a9c7fbbb22a9c29ad96",
-    "node-memwatch": "git://github.com/lloyd/node-memwatch#b259830444e452da0a35a20b6b4e0249164bad85"
+    "node-gcstats": "git://github.com/jedp/node-memwatch"
   },
 
   "scripts": {
