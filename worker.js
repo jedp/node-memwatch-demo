@@ -90,7 +90,7 @@ var goFastWorkers = function goFastWorkers(interval) {
   }
 };
 
-function LeakyClass(someInput) {
+function DeathBunny(someInput) {
   this.info = Math.random();
   this.foo = someInput;
   return this.foo + this.info;
@@ -106,7 +106,7 @@ var goLeakyWorkers = function goLeakyWorkers() {
     var txt = "";
     for (var i=0; i<max; i++) {
       // concat a new huge string each time
-      leak.push( new LeakyClass(Math.random() + bigText.slice(i)) );
+      leak.push( new DeathBunny(Math.random() + bigText.slice(i)) );
     }
   }
   setTimeout(goLeakyWorkers, 10);
