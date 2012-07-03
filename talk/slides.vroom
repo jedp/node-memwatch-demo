@@ -30,8 +30,9 @@ node-memwatch
 
 Detecting and Finding Memory Leaks in Node.JS
 
-by Lloyd Hilaiel  https://github.com/lloyd/
-and Jed Parsons  https://github.com/jedp/
+      Lloyd Hilaiel                  Jed Parsons
+ https://github.com/lloyd/     https://github.com/jedp/
+      @lloydhilaiel                  @drainmice
 
 
 [For the impatient]
