@@ -6,7 +6,7 @@
   "dependencies": {
     "express": "2.5.10",
     "socket.io": "0.9.6",
-    "node-gcstats": "git://github.com/jedp/node-memwatch"
+    "node-gcstats": "git://github.com/jedp/node-memwatch#incremental"
   },
 
   "scripts": {
