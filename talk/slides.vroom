@@ -189,6 +189,7 @@ consecutive heap snapshots, we can produce a heap diff.
         }
       ]
     }
+  }
 ---- center
 == Example 3
 
